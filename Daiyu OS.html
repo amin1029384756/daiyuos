@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!-- saved from url=(0027)https://daiyu-os.glitch.me/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Daiyu OS</title>
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="./Daiyu OS_files/css" rel="stylesheet">
+    <link rel="stylesheet" href="./Daiyu OS_files/styles.css">
+  </head>
+  <body>
+    <div id="Auth" class="auth" style="display: none;">
+      <div id="sign-up-section" class="section-solid">
+        <h2>Create Your Account</h2>
+        <form id="sign-up-form">
+          <input id="sign-up-email" type="email" placeholder="Enter Your Email">
+          <input id="sign-up-password" type="password" placeholder="Create A Password">
+          <input type="submit" class="blue-btn" value="Sign Up">
+        </form>
+      </div>
+      <div id="sign-in-section" class="section-solid">
+        <h2>Sign In To Your Account</h2>
+        <form id="sign-in-form">
+          <input id="sign-in-email" type="email" placeholder="Email">
+          <input id="sign-in-password" type="password" placeholder="Password">
+          <input type="submit" class="blue-btn" value="Sign In">
+        </form>
+      </div>
+      <script>
+      var OpenSettings = () => {
+    Browser.style.display = 'none'  
+    SNAKEGAME.style.display = 'none'       
+    Settings.style.display = 'block'       
+      }
+      var CloseSettings = () => {
+    Settings.style.display = 'none'       
+      }
+        var OpenBrowser = () => {
+    Settings.style.display = 'none' 
+    SNAKEGAME.style.display = 'none'       
+    Browser.style.display = 'block'       
+      }
+      var CloseBrowser = () => {
+    Browser.style.display = 'none'       
+      }
+      var OpenSNAKEGAME = () => {
+        SNAKEGAME.style.display = 'block'
+        Browser.style.display = 'none'  
+        Settings.style.display = 'none' 
+      }
+      var RunPageProc = () => {
+        document.getElementById("Page").src = document.getElementById("SearchBar").value;
+      }
+      </script>
+      <div class="section-border" id="login-section">
+        <h2>
+          Login Status: <span id="login-status" class="red green-text">Logged In</span>
+        </h2>
+        <p>User Email: <span id="user-email-display">alogailiamin@outlook.com</span></p>
+        <p>User ID: <span id="user-id-display">JDw8hdv15LYpLceQIhxNNa9Pwi53</span></p>
+        <button id="logout-btn" class="red-btn">Sign Out</button>
+      </div>
+    </div>
+    <div id="MainFrame" class="mainframe" style="display: block;">
+      <div class="navbar"><center>
+            <img id="Settings-Icon" onclick="OpenSettings()" src="./Daiyu OS_files/a4fad015-6fed-47bc-b419-903d6f3fbc61_568239.png" width="40">
+            <img id="Browser-Icon" onclick="OpenBrowser()" src="./Daiyu OS_files/a4fad015-6fed-47bc-b419-903d6f3fbc61_21-215513_png-file-browser-logo-black-and-white.png" width="40">
+            <img id="SNAKEGAME_Icon" onclick="OpenSNAKEGAME()" src="./Daiyu OS_files/a4fad015-6fed-47bc-b419-903d6f3fbc61_gobble-snake-game.png" width="40">
+                <button id="logout-btn" class="red-btn" width="150">Sign Out</button>
+        </center>   </div>
+      <div id="SNAKEGAME" style="display: block;">
+            <canvas id="snake" width="512" height="512"></canvas>
+        <script src="./Daiyu OS_files/GAME.js.download"></script>
+      </div>
+    <div id="Icons">
+      </div>
+      <div id="Browser" style="display: none;">
+                  <button type="submit" style="color:black" onclick="RunPageProc()">Search</button><button>
+      <input type="text" id="SearchBar">
+        <iframe id="Page" src="./Daiyu OS_files/saved_resource.html" style="width: 100%" height="512" title="Browser"></iframe>
+      </button></div>
+          <div id="Settings" class="settings" style="display: none;">
+        <div class="section-border" id="write-data-section">
+          <h2>Write User Data</h2>
+          <form id="write-data-form">
+            <input placeholder="Name" type="text" id="user-name-write">
+            <input placeholder="Age" type="text" id="user-age-write">
+            <input placeholder="Occupation" type="text" id="user-occupation-write">
+            <div style="margin: 15px 0px">
+              <span>US Citizen? </span>
+              <select id="user-citizen-write">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+            <input type="submit" class="green-btn" value="Update Data">
+          </form>
+        </div>
+
+        <div class="section-border" id="read-data-section">
+          <h2>Read User Data</h2>
+          <p><b>Name:</b> <span id="user-name-read">Amin</span></p>
+          <p><b>Age:</b> <span id="user-age-read">13</span></p>
+          <p><b>Occupation:</b> <span id="user-occupation-read">Student/Programmer</span></p>
+          <p><b>US Citizen:</b> <span id="user-citizen-read">Yes</span></p>
+        </div>
+          <button id="SettingsBack" class="red-btn" onclick="CloseSettings()">&lt;-- Back</button>
+      </div>
+    </div>
+    <!-- FIREBASE -->
+    <script src="./Daiyu OS_files/firebase.js.download"></script>
+
+    <!-- APP JAVASCRIPT -->
+    <script src="./Daiyu OS_files/script.js.download" defer=""></script>
+  
+
+</body></html>

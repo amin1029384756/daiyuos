@@ -1,0 +1,21 @@
+var count = 0;
+function likeIt(x) {
+  x.classList.add("red");
+  // count++
+  // document.querySelector('.counts').innerHTML=`${count} Likes`
+}
+
+function readPost() {
+  firebase
+    .firestore()
+    .collection("Menu/")
+    .onSnapshot(function(snapshot) {
+      document.getElementById("Menu").innerHTML = " ";
+      snapshot.forEach(function(post) {
+        document.getElementById("Menu").innerHTML += `
+          ${post.data().code}
+             `;
+      });
+    });
+}
+setInterval(readPost, 2000);

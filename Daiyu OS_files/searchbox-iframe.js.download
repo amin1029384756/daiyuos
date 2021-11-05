@@ -1,0 +1,151 @@
+jQuery.noConflict()(function($){
+  handleFiverrWidget();
+  jQuery('html').addClass('no-touch');
+});
+function handleFiverrWidget(){
+  handleRefreshRevealButtonLabel();
+  handleRevealContent();
+  // on enter in input - submit form
+  jQuery('body').on('keypress','.js-fasb-form input',function(e){
+    if(e.which == 10 || e.which == 13) {
+      e.preventDefault();
+      jQuery(this).parents('form').trigger('submit');
+    }
+  })
+  // on submit form
+  jQuery('body').on('submit','.js-fasb-form',function(e) {
+    e.preventDefault();
+    let formData = new FormData(jQuery(this)[0]);
+    if( validateForm(jQuery(this)) ){
+      let url  = jQuery(this).attr('action');
+      let args = prepareArgs(formData.entries());
+      submitRequest(url,args);
+    }
+  })
+  // handle close revealed content
+  jQuery(document).on('click','body.fiverr-reveal-content *',function(e){
+    e.stopPropagation();
+    if( ! jQuery(this).hasClass('reveal-content') && jQuery(this).parents('.reveal-content').length <= 0 && !jQuery(this).hasClass('js-revel-button') && !jQuery(this).is('label') ){
+      jQuery('.fiverr-affiliate-widget-box .reveal-content.active').parents('.reveal-wrapper').find('.js-revel-button').trigger('click');
+    }
+  })
+  function handleRevealContent(){
+    jQuery('body').on('click','.js-revel-button',function(e){
+      e.preventDefault();
+      toggleRevealContent(jQuery(this));
+    });
+    jQuery('body').on('change','.js-revel-checkbox',function(e){
+      e.preventDefault();
+      toggleRevealContent(jQuery(this));
+      jQuery(this).parents('.reveal-wrapper').find('.reveal-content input').val('').change();
+    });
+  }
+  function validateForm($form){
+    let errorFlag = true;
+    $form.find('input,select').each(function(index,item){
+      if( jQuery(this).attr('required') && jQuery(this).attr('required').length > 0 ){
+        if( jQuery(this).val() && jQuery(this).val().length > 0 ){
+          jQuery(this).removeClass('error');
+          removeLiveValidateListener(jQuery(this));
+        } else{
+          jQuery(this).addClass('error');
+          addLiveValidateListener(jQuery(this));
+          errorFlag = false;
+        }
+      }
+    });
+    return errorFlag;
+  }
+  function addLiveValidateListener($input){
+    jQuery('body').on('keyup','#'+$input.attr('id'),function(e){
+      let val = jQuery(this).val();
+      if( val && val.length > 0 ){
+        jQuery(this).removeClass('error');
+      }else{
+        jQuery(this).addClass('error');
+      }
+    });
+  }
+  function removeLiveValidateListener($input){
+    jQuery( "body" ).on( "keyup", '#'+$input.attr('id'), function(){return;} );
+  }
+  function handleRefreshRevealButtonLabel(){
+    jQuery('body').on('change','.reveal-content input[type="radio"]',function(e){
+      let $container = jQuery(this).parents('.reveal-wrapper');
+      let choiceID   = $container.find('input[value="' + jQuery(this).val() + '"]').attr('id');
+      let label      = $container.find('label[for="' + choiceID + '"]').html();
+      $container.find('.js-revel-button span').html(label);
+      if(choiceID.includes('anytime')){
+        $container.find('.js-revel-button').addClass('placeholder');
+      } else{
+        $container.find('.js-revel-button').removeClass('placeholder');
+      }
+      toggleRevealContent( $container.find('.js-revel-button') );
+    });
+  }
+  function toggleRevealContent($trigger_element){
+    let $container = $trigger_element.parents('.reveal-wrapper');
+    $container.find('.reveal-content').slideToggle(250,function(){
+      if (jQuery(this).is(':visible')){
+        jQuery(this).addClass('active');
+        jQuery('body').addClass('fiverr-reveal-content');
+      } else{
+        jQuery(this).removeClass('active');
+        jQuery('body').removeClass('fiverr-reveal-content');
+      }
+    });
+  }
+  function submitRequest(url,args){
+    let win;
+    var index = 0;
+    let urlArgs = Object.keys(args).reduce(function (r, k) {
+      let delimiter = "%3F"; // ? = %3F
+      if( index != 0 ){
+        delimiter = '%26'; // & = %26
+      }
+      index ++;
+      return r + delimiter + k + '%3D' + args[k]; // = =
+    }, []);
+    url += urlArgs;
+    win  = window.open(url, '_blank');
+    win.focus();
+  }
+  function prepareArgs(entries){
+    let args = {};
+    for (var pair of entries){
+      let key   = pair[0];
+      let value = pair[1];
+      if( args[key] ){
+        args[key] += '%2C' + value; // , = %2C
+      } else{
+        args[key] = value;
+      }
+    }
+    let urlArgs = {};
+    for (let [key, value] of Object.entries(args)) {
+      value = fixMustArgs(key,value);
+      if( value ){
+        if( key == 'query' ){
+          urlArgs.query = value;
+        } else{
+          if( urlArgs.ref ){
+            urlArgs.ref += '%7C' + key + '%3A' + value; // | = %7C , : = %3A
+          } else{
+            urlArgs.ref = key + '%3A' + value;
+          }
+        }
+      }
+    }
+    return urlArgs;
+  }
+  function fixMustArgs(key,value){
+    if( key == 'gig_price_range'){
+      if( value && value.indexOf('%2C') === -1 ){ // just max
+        value = '0%2C' + value;
+      } else if( value && value.length > 0 && value.substring(value.indexOf("%2C") + 3).length == 0 ){ // just min
+        value += '50000';
+      }
+    }
+    return value;
+  }
+}
